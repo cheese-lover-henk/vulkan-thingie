@@ -24,20 +24,29 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE FMT_HEADER_ONLY=1)
 
+# IMGUI
 file(GLOB IMGUI_SRC
 	vendor-libs/imgui/*.cpp
     vendor-libs/imgui/backends/imgui_impl_*.cpp
 )
 target_sources(${PROJECT_NAME} PRIVATE ${IMGUI_SRC})
 
+# VULKAN
 find_package(Vulkan REQUIRED)
 target_include_directories(${PROJECT_NAME} PRIVATE ${Vulkan_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} PRIVATE ${Vulkan_LIBRARIES})
 
+# TINYOBJ
 file(GLOB TINYOBJ_SRC vendor-libs/tinyobjloader/*.cc)
 if(TINYOBJ_SRC)
 	target_sources(${PROJECT_NAME} PRIVATE ${TINYOBJ_SRC})
 endif()
 
+
+# SDL2
 find_package(SDL2 REQUIRED)
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2 SDL2::SDL2main)
+
+# VKBOOTSTRAP
+add_subdirectory(${CMAKE_SOURCE_DIR}/vendor-libs/vk-bootstrap)
+target_link_libraries(${PROJECT_NAME} PRIVATE vk-bootstrap)
